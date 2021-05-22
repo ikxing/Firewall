@@ -255,17 +255,22 @@ public class FirewallVpnService extends VpnService implements Runnable {
 			DebugLog.i("addDefaultRoute: 0.0.0.0/0\n");
 		}
 
-		Class<?> SystemProperties = Class.forName("android.os.SystemProperties");
-		Method method = SystemProperties.getMethod("get", new Class[]{String.class});
-		ArrayList<String> servers = new ArrayList<>();
-		for (String name : new String[]{"net.dns1", "net.dns2", "net.dns3", "net.dns4",}) {
-			String value = (String) method.invoke(null, name);
-			if (value != null && !"".equals(value) && !servers.contains(value)) {
-				servers.add(value);
-				builder.addRoute(value, 32); //添加路由，使得DNS查询流量也走该VPN接口
-
-				DebugLog.i("%s=%s\n", name, value);
-			}
+//		Class<?> SystemProperties = Class.forName("android.os.SystemProperties");
+//		Method method = SystemProperties.getMethod("get", new Class[]{String.class});
+//		ArrayList<String> servers = new ArrayList<>();
+//		for (String name : new String[]{"net.dns1", "net.dns2", "net.dns3", "net.dns4",}) {
+//			String value = (String) method.invoke(null, name);
+//			if (value != null && !"".equals(value) && !servers.contains(value)) {
+//				servers.add(value);
+//				builder.addRoute("0.0.0.0", 32); //添加路由，使得DNS查询流量也走该VPN接口
+//
+//				DebugLog.i("%s=%s\n", name, value);
+//			}
+//		}
+		String[] DNS_IPS = {"223.5.5.5"};
+		// DNS Server，就是该端口的DNS服务器地址；
+		for (String ip : DNS_IPS) {
+			builder.addDnsServer(ip);
 		}
 
 		Intent intent = new Intent(this, MainActivity.class);
